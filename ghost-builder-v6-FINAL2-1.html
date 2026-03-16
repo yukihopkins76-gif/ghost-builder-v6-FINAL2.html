@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#070A0F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ghost Builder">
+<title>Ghost Builder v6.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#070A0F;--base:#0C1018;--surf:#131920;--over:#1C2430;--lift:#252F3D;
+  --b1:rgba(255,255,255,.03);--b2:rgba(255,255,255,.07);--b3:rgba(255,255,255,.13);--b4:rgba(255,255,255,.22);
+  --t1:#EDF2F7;--t2:#8896A8;--t3:#4A5568;--t4:#2D3748;
+  --cy:#38BDF8;--cy-d:#0369A1;--cy-bg:rgba(56,189,248,.07);--cy-bdr:rgba(56,189,248,.22);
+  --gr:#4ADE80;--gr-d:#16A34A;--gr-bg:rgba(74,222,128,.07);--gr-bdr:rgba(74,222,128,.22);
+  --am:#FCD34D;--am-d:#B45309;--am-bg:rgba(252,211,77,.07);--am-bdr:rgba(252,211,77,.22);
+  --rd:#F87171;--rd-bg:rgba(248,113,113,.07);--rd-bdr:rgba(248,113,113,.22);
+  --pu:#C084FC;--pu-bg:rgba(192,132,252,.07);--pu-bdr:rgba(192,132,252,.22);
+  --pk:#F472B6;
+  --mono:'IBM Plex Mono',monospace;--sans:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--void);color:var(--t1);font-family:var(--mono);overflow:hidden;display:flex;flex-direction:column;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(56,189,248,.007) 3px,rgba(56,189,248,.007) 4px);pointer-events:none;z-index:9999;}
+
+/* ═══ HEADER ═══ */
+.hdr{flex-shrink:0;height:46px;background:var(--base);border-bottom:1px solid var(--b2);display:flex;align-items:center;padding:0 14px;gap:12px;position:relative;z-index:100;}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cy-bdr) 30%,var(--cy-bdr) 70%,transparent);}
+.brand{display:flex;align-items:center;gap:9px;padding-right:14px;border-right:1px solid var(--b2);}
+.brand-ico{width:28px;height:28px;background:linear-gradient(135deg,var(--cy-d),var(--cy));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 18px rgba(56,189,248,.3);}
+.brand-txt .brand-name{font-family:var(--sans);font-size:13px;font-weight:800;color:var(--t1);line-height:1;}
+.brand-txt .brand-sub{font-size:8px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
+.hdr-pills{display:flex;gap:5px;align-items:center;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:9px;font-family:var(--mono);font-weight:600;border:1px solid transparent;letter-spacing:.3px;white-space:nowrap;}
+.pill-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.pill.cy{background:var(--cy-bg);border-color:var(--cy-bdr);color:var(--cy);}
+.pill.cy .pill-dot{background:var(--cy);box-shadow:0 0 5px var(--cy);}
+.pill.gr{background:var(--gr-bg);border-color:var(--gr-bdr);color:var(--gr);}
+.pill.gr .pill-dot{background:var(--gr);box-shadow:0 0 5px var(--gr);animation:pdot 2s ease-in-out infinite;}
+.pill.am{background:var(--am-bg);border-color:var(--am-bdr);color:var(--am);}
+.pill.am .pill-dot{background:var(--am);}
+.pill.pu{background:var(--pu-bg);border-color:var(--pu-bdr);color:var(--pu);}
+.pill.pu .pill-dot{background:var(--pu);animation:pdot .8s ease-in-out infinite;}
+.pill.rd{background:var(--rd-bg);border-color:var(--rd-bdr);color:var(--rd);}
+.pill.nu{background:var(--b1);border-color:var(--b2);color:var(--t3);}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:7px;}
+.hbtn{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;font-size:10px;font-family:var(--mono);font-weight:500;cursor:pointer;border:1px solid var(--b2);background:transparent;color:var(--t2);transition:all .12s;white-space:nowrap;}
+.hbtn:hover{background:var(--surf);color:var(--t1);border-color:var(--b3);}
+.hbtn.cy{background:var(--cy-bg);border-color:var(--cy-bdr);color:var(--cy);}
+.hbtn.cy:hover{background:rgba(56,189,248,.14);}
+#btn-install{display:none;}
+#btn-install.show{display:flex;}
+kbd{background:var(--lift);border:1px solid var(--b3);border-radius:3px;padding:1px 5px;font-size:8px;font-family:var(--mono);color:var(--t3);}
+
+/* ═══ WORKSPACE ═══ */
+.ws{flex:1;display:grid;grid-template-columns:1fr 340px;min-height:0;overflow:hidden;}
+@media(max-width:660px){.ws{grid-template-columns:1fr;}.rpanel{display:none;}}
+
+/* ═══ LEFT ═══ */
+.lpanel{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+
+/* ── AI MODE SELECTOR ── */
+.mode-bar{flex-shrink:0;background:var(--base);border-bottom:1px solid var(--b2);padding:10px 14px;}
+.mode-bar-label{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.mode-bar-label .lock-notice{display:none;align-items:center;gap:5px;padding:2px 8px;background:var(--am-bg);border:1px solid var(--am-bdr);border-radius:20px;font-size:9px;color:var(--am);font-weight:600;}
+.mode-bar-label .lock-notice.show{display:flex;}
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+.mode-card{
+  position:relative;
+  padding:10px 12px;
+  background:var(--surf);
+  border:1px solid var(--b2);
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .15s;
+  user-select:none;
+}
+.mode-card:hover{border-color:var(--b3);}
+.mode-card.selected.local{background:rgba(56,189,248,.06);border-color:var(--cy-bdr);box-shadow:0 0 0 1px var(--cy-bdr);}
+.mode-card.selected.cloud{background:rgba(252,211,77,.06);border-color:var(--am-bdr);box-shadow:0 0 0 1px var(--am-bdr);}
+.mode-card.locked{cursor:not-allowed;opacity:.7;}
+.mode-card.locked.selected{opacity:1;}
+
+.mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.mc-icon{font-size:16px;}
+.mc-badge{font-size:8px;font-family:var(--mono);font-weight:600;padding:2px 6px;border-radius:3px;letter-spacing:.5px;}
+.mode-card.local .mc-badge{background:var(--gr-bg);color:var(--gr);border:1px solid var(--gr-bdr);}
+.mode-card.cloud .mc-badge{background:var(--am-bg);color:var(--am);border:1px solid var(--am-bdr);}
+
+.mc-name{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.mc-desc{font-size:9px;color:var(--t3);font-family:var(--mono);line-height:1.4;}
+.mode-card.selected.local .mc-name{color:var(--cy);}
+.mode-card.selected.cloud .mc-name{color:var(--am);}
+
+/* Sub-options inside local card */
+.mc-subopts{margin-top:8px;display:none;flex-direction:column;gap:4px;}
+.mode-card.selected .mc-subopts{display:flex;}
+.mc-subopt{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 8px;background:var(--void);
+  border:1px solid var(--b2);border-radius:6px;
+  cursor:pointer;transition:all .1s;
+}
+.mc-subopt:hover{border-color:var(--b3);}
+.mc-subopt.active{border-color:var(--cy-bdr);background:var(--cy-bg);}
+.mc-subopt-name{font-size:10px;color:var(--t2);font-family:var(--mono);}
+.mc-subopt.active .mc-subopt-name{color:var(--cy);}
+.mc-subopt-speed{font-size:8px;color:var(--t3);font-family:var(--mono);}
+.mc-subopt.active .mc-subopt-speed{color:var(--am);}
+
+/* Cloud API key input */
+.mc-apikey{margin-top:8px;display:none;}
+.mode-card.selected.cloud .mc-apikey{display:block;}
+.apikey-inp{
+  width:100%;background:var(--void);border:1px solid var(--b2);
+  border-radius:6px;padding:6px 10px;
+  font-family:var(--mono);font-size:10px;color:var(--t1);
+  outline:none;transition:border-color .1s;
+}
+.apikey-inp:focus{border-color:var(--am-bdr);}
+.apikey-inp::placeholder{color:var(--t4);}
+
+/* Lock overlay on non-selected card during build */
+.mode-card .lock-overlay{
+  position:absolute;inset:0;border-radius:10px;
+  background:rgba(7,10,15,.75);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:5px;
+  backdrop-filter:blur(2px);
+}
+.mode-card .lock-overlay.show{display:flex;}
+.lock-ico{font-size:22px;}
+.lock-txt{font-size:9px;color:var(--am);font-family:var(--mono);font-weight:600;}
+
+/* ── PROMPT ── */
+.prompt-sec{flex-shrink:0;background:var(--base);border-bottom:1px solid var(--b2);padding:12px 14px;}
+.ps-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ps-label{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;}
+.speed-toggle{display:flex;background:var(--void);border:1px solid var(--b2);border-radius:5px;overflow:hidden;}
+.stog-opt{padding:3px 10px;font-size:9px;font-family:var(--mono);font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);transition:all .12s;letter-spacing:.3px;}
+.stog-opt.active.fast{background:var(--am-bg);color:var(--am);}
+.stog-opt.active.quality{background:var(--cy-bg);color:var(--cy);}
+.prompt-row{display:flex;gap:8px;align-items:flex-end;}
+.prompt-ta{
+  flex:1;min-height:42px;max-height:100px;
+  background:var(--void);border:1px solid var(--b2);border-radius:8px;
+  padding:10px 12px;color:var(--t1);font-family:var(--mono);font-size:12px;
+  resize:none;outline:none;line-height:1.6;transition:border-color .15s,box-shadow .15s;
+}
+.prompt-ta:focus{border-color:var(--cy-bdr);box-shadow:0 0 0 3px rgba(56,189,248,.07);}
+.prompt-ta::placeholder{color:var(--t4);}
+.build-btn{
+  flex-shrink:0;height:42px;padding:0 18px;
+  background:linear-gradient(135deg,var(--cy-d),var(--cy));
+  border:none;border-radius:8px;color:#070A0F;
+  font-family:var(--sans);font-size:12px;font-weight:800;
+  cursor:pointer;letter-spacing:.5px;transition:all .15s;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(56,189,248,.25);
+}
+.build-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(56,189,248,.4);}
+.build-btn:active{transform:translateY(0);}
+.build-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* STAGE BAR */
+.stage-bar{flex-shrink:0;display:flex;align-items:center;gap:0;padding:7px 14px;background:var(--base);border-bottom:1px solid var(--b1);overflow-x:auto;}
+.stage-bar::-webkit-scrollbar{display:none;}
+.stage-item{display:flex;align-items:center;}
+.snode{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:4px;font-size:9px;font-family:var(--mono);font-weight:600;color:var(--t4);border:1px solid transparent;transition:all .2s;letter-spacing:.3px;white-space:nowrap;}
+.snode.done{color:var(--gr);background:var(--gr-bg);border-color:var(--gr-bdr);}
+.snode.active{color:var(--cy);background:var(--cy-bg);border-color:var(--cy-bdr);animation:sna .8s ease-in-out infinite;}
+@keyframes sna{0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,.3)}50%{box-shadow:0 0 0 4px rgba(56,189,248,.07)}}
+.sarrow{color:var(--t4);font-size:9px;padding:0 4px;}
+
+/* TABS */
+.tab-bar{flex-shrink:0;display:flex;background:var(--base);border-bottom:1px solid var(--b2);padding:0 14px;}
+.tab{display:flex;align-items:center;gap:5px;padding:8px 12px 7px;font-size:10px;font-family:var(--mono);color:var(--t3);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .12s;margin-bottom:-1px;white-space:nowrap;}
+.tab:hover{color:var(--t2);}
+.tab.active{color:var(--t1);border-bottom-color:var(--cy);}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--t4);}
+.tab.active .tdot{background:var(--cy);box-shadow:0 0 5px var(--cy);}
+
+/* PANES */
+.panes{flex:1;position:relative;min-height:0;overflow:hidden;}
+.pane{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
+.pane.active{display:flex;}
+
+/* STREAM */
+.stream{flex:1;overflow-y:auto;padding:12px 14px;font-size:11px;line-height:1.9;}
+.stream::-webkit-scrollbar{width:3px;}
+.stream::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
+.aline{display:grid;grid-template-columns:52px 56px 1fr;gap:5px;padding:0;animation:alin .15s ease;}
+@keyframes alin{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.al-ts{font-size:9px;color:var(--t4);padding-top:1px;}
+.al-tag{font-size:9px;font-weight:600;padding-top:1px;letter-spacing:.3px;}
+.al-msg{color:var(--t2);word-break:break-word;}
+.aline.sys .al-tag{color:var(--t4);}.aline.sys .al-msg{color:var(--t3);}
+.aline.think .al-tag{color:var(--pu);}.aline.think .al-msg{color:rgba(192,132,252,.85);font-style:italic;}
+.aline.spec .al-tag{color:var(--am);}.aline.spec .al-msg{color:rgba(252,211,77,.8);}
+.aline.code .al-tag{color:var(--cy-d);}.aline.code .al-msg{color:var(--cy);font-size:10.5px;}
+.aline.ok .al-tag{color:var(--gr);}.aline.ok .al-msg{color:rgba(74,222,128,.75);}
+.aline.err .al-tag{color:var(--rd);}.aline.err .al-msg{color:rgba(248,113,113,.8);}
+.aline.head .al-tag{color:var(--pk);}.aline.head .al-msg{color:var(--t1);font-weight:600;}
+.aline.data .al-tag{color:var(--t2);}.aline.data .al-msg{color:var(--t1);}
+.aline.lock .al-tag{color:var(--am);}.aline.lock .al-msg{color:var(--am);}
+.scur{display:inline-block;width:6px;height:12px;background:var(--cy);vertical-align:text-bottom;margin-left:2px;animation:scblink .9s step-end infinite;}
+@keyframes scblink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* PREVIEW */
+.preview-wrap{flex:1;display:flex;flex-direction:column;min-height:0;}
+.preview-topbar{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--base);border-bottom:1px solid var(--b2);}
+.preview-url{flex:1;background:var(--void);border:1px solid var(--b2);border-radius:5px;padding:5px 10px;font-size:10px;color:var(--t3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.preview-fw{flex:1;position:relative;min-height:0;}
+.preview-frame{width:100%;height:100%;border:none;background:#fff;}
+.preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;}
+.pei{font-size:40px;opacity:.2;}
+.pet{font-size:11px;color:var(--t4);text-align:center;line-height:1.7;}
+.preview-loading{position:absolute;inset:0;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.spin{width:30px;height:30px;border:2px solid var(--b2);border-top-color:var(--cy);border-radius:50%;animation:spinning .7s linear infinite;}
+@keyframes spinning{to{transform:rotate(360deg)}}
+.spin-txt{font-size:10px;color:var(--t3);}
+
+/* SAVED APPS */
+.apps-list{flex:1;overflow-y:auto;padding:10px;}
+.apps-list::-webkit-scrollbar{width:3px;}
+.apps-list::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
+.app-card{background:var(--surf);border:1px solid var(--b2);border-radius:8px;padding:11px;margin-bottom:7px;transition:border-color .12s;}
+.app-card:hover{border-color:var(--b3);}
+.acard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;}
+.acard-name{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--t1);}
+.acard-ts{font-size:9px;color:var(--t4);font-family:var(--mono);}
+.acard-desc{font-size:10px;color:var(--t3);line-height:1.5;margin-bottom:7px;}
+.acard-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px;}
+.atag{padding:2px 6px;background:var(--b1);border:1px solid var(--b2);border-radius:3px;font-size:8px;color:var(--t3);font-family:var(--mono);}
+.acard-btns{display:flex;gap:5px;}
+.acbtn{flex:1;padding:5px;background:transparent;border:1px solid var(--b2);border-radius:5px;color:var(--t3);font-size:10px;font-family:var(--mono);cursor:pointer;transition:all .1s;text-align:center;}
+.acbtn:hover{color:var(--t1);border-color:var(--b3);}
+.acbtn.dl{color:var(--cy);border-color:var(--cy-bdr);}
+.acbtn.dl:hover{background:var(--cy-bg);}
+.acbtn.del{color:var(--rd);}
+.acbtn.del:hover{background:var(--rd-bg);border-color:var(--rd-bdr);}
+.empty-st{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:8px;}
+.esi{font-size:32px;opacity:.2;}
+.est{font-size:11px;color:var(--t4);text-align:center;line-height:1.7;}
+
+/* ═══ RIGHT PANEL ═══ */
+.rpanel{background:var(--base);border-left:1px solid var(--b2);display:flex;flex-direction:column;overflow:hidden;}
+.rp-sec{padding:12px 13px;border-bottom:1px solid var(--b1);}
+.rp-lbl{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;}
+
+/* Ring */
+.ring-wrap{display:flex;flex-direction:column;align-items:center;padding:14px 13px;border-bottom:1px solid var(--b1);}
+.ring-svg{width:68px;height:68px;}
+.ring-bg{fill:none;stroke:var(--b2);stroke-width:5;}
+.ring-fill{fill:none;stroke:var(--cy);stroke-width:5;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .4s ease;}
+.ring-pct{font-family:var(--sans);font-weight:800;font-size:13px;fill:var(--t1);}
+.ring-sub{font-family:var(--mono);font-size:7px;fill:var(--t4);}
+
+/* Stats */
+.stats-g{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 13px;border-bottom:1px solid var(--b1);}
+.sbox{background:var(--surf);border:1px solid var(--b2);border-radius:6px;padding:8px;text-align:center;}
+.sval{font-family:var(--sans);font-size:18px;font-weight:800;line-height:1;margin-bottom:2px;}
+.sval.cy{color:var(--cy);}.sval.gr{color:var(--gr);}.sval.am{color:var(--am);}.sval.pu{color:var(--pu);}
+.slbl{font-size:8px;color:var(--t4);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;}
+
+/* Spec */
+.spec-scroll{flex:1;overflow-y:auto;}
+.spec-scroll::-webkit-scrollbar{width:3px;}
+.spec-scroll::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
+.spec-blk{padding:10px 13px;border-bottom:1px solid var(--b1);}
+.spec-blk-lbl{font-size:8px;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;font-family:var(--mono);}
+.spec-blk-val{font-size:12px;color:var(--t1);font-family:var(--sans);font-weight:600;line-height:1.4;}
+.spec-blk-val.mono{font-family:var(--mono);font-weight:400;font-size:10px;color:var(--t2);}
+.feat-list{display:flex;flex-direction:column;gap:3px;}
+.feat-item{font-size:10px;color:var(--t2);font-family:var(--mono);display:flex;align-items:flex-start;gap:6px;line-height:1.5;}
+.feat-item::before{content:'▸';color:var(--cy);flex-shrink:0;margin-top:1px;}
+
+/* Device */
+.dev-rows{padding:10px 13px;}
+.dev-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--b1);}
+.dev-row:last-child{border-bottom:none;}
+.dev-k{font-size:9px;color:var(--t4);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;}
+.dev-v{font-size:10px;color:var(--cy);font-family:var(--mono);font-weight:500;}
+.dev-v.gr{color:var(--gr);}.dev-v.am{color:var(--am);}.dev-v.nu{color:var(--t2);}
+
+/* ═══ STATUS BAR ═══ */
+.sbar{flex-shrink:0;height:22px;background:var(--cy-d);display:flex;align-items:center;padding:0 14px;gap:10px;font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.85);}
+.sbar.idle{background:var(--over);border-top:1px solid var(--b2);}
+.sbar.idle *{color:var(--t4);}
+.sb-i{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.sb-sp{flex:1;}
+.sb-sep{width:1px;height:10px;background:rgba(255,255,255,.15);}
+.sbar.idle .sb-sep{background:var(--b2);}
+
+/* ═══ CMD PALETTE ═══ */
+.cp-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:900;display:none;align-items:flex-start;justify-content:center;padding-top:65px;}
+.cp-bg.open{display:flex;}
+.cp-box{width:100%;max-width:490px;background:var(--over);border:1px solid var(--b3);border-radius:12px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.9);}
+.cp-row{display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid var(--b2);}
+.cp-inp{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:13px;color:var(--t1);caret-color:var(--cy);}
+.cp-inp::placeholder{color:var(--t4);}
+.cp-res{max-height:280px;overflow-y:auto;}
+.cp-grp{padding:7px 14px 3px;font-size:8px;color:var(--t4);letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);}
+.cp-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;transition:background .08s;}
+.cp-item:hover,.cp-item.sel{background:var(--cy-bg);}
+.cp-ico{width:26px;height:26px;background:var(--lift);border:1px solid var(--b2);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.cp-item-b{flex:1;}
+.cp-item-n{font-size:12px;color:var(--t1);font-family:var(--sans);}
+.cp-item-d{font-size:9px;color:var(--t3);font-family:var(--mono);margin-top:1px;}
+.cp-foot{padding:7px 14px;border-top:1px solid var(--b1);display:flex;gap:10px;font-size:8px;color:var(--t4);font-family:var(--mono);}
+
+/* ═══ MODAL ═══ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);z-index:800;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--over);border:1px solid var(--b3);border-radius:12px;padding:20px;max-width:360px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.9);}
+.modal-t{font-family:var(--sans);font-size:15px;font-weight:700;color:var(--t1);margin-bottom:8px;}
+.modal-b{font-size:11px;color:var(--t2);line-height:1.7;margin-bottom:16px;font-family:var(--mono);}
+.modal-b strong{color:var(--cy);}
+.modal-btns{display:flex;gap:6px;justify-content:flex-end;}
+.mbtn{padding:7px 14px;border-radius:6px;border:1px solid var(--b3);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .1s;}
+.mbtn:hover{background:var(--lift);color:var(--t1);}
+.mbtn.ok{background:var(--cy-bg);border-color:var(--cy-bdr);color:var(--cy);}
+
+/* iOS */
+.ios-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:850;display:none;align-items:flex-end;justify-content:center;}
+.ios-bg.open{display:flex;}
+.ios-sheet{background:var(--over);border:1px solid var(--b3);border-radius:20px 20px 0 0;padding:20px 16px 34px;width:100%;max-width:480px;}
+.ios-handle{width:32px;height:4px;background:var(--b3);border-radius:2px;margin:0 auto 16px;}
+.ios-title{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--t1);text-align:center;margin-bottom:16px;}
+.ios-step{display:flex;gap:9px;margin-bottom:11px;align-items:flex-start;}
+.ios-num{min-width:22px;height:22px;border-radius:50%;background:var(--cy-bg);border:1px solid var(--cy-bdr);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--cy);font-family:var(--mono);flex-shrink:0;}
+.ios-txt{font-size:11px;color:var(--t2);line-height:1.5;font-family:var(--mono);}
+.ios-txt strong{color:var(--t1);}
+.ios-close{width:100%;margin-top:12px;padding:10px;background:var(--lift);border:1px solid var(--b3);border-radius:7px;color:var(--t2);font-family:var(--mono);font-size:11px;cursor:pointer;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="brand">
+    <div class="brand-ico">👻</div>
+    <div class="brand-txt">
+      <div class="brand-name">Ghost Builder</div>
+      <div class="brand-sub">Agentic AI · v6.0</div>
+    </div>
+  </div>
+  <div class="hdr-pills">
+    <div class="pill gr" id="pill-net"><span class="pill-dot"></span><span id="pill-net-txt">ONLINE</span></div>
+    <div class="pill cy" id="pill-mode"><span class="pill-dot"></span><span id="pill-mode-txt">LOCAL AI</span></div>
+    <div class="pill nu" id="pill-stage"><span id="pill-stage-txt">IDLE</span></div>
+  </div>
+  <div class="hdr-right">
+    <span style="font-size:9px;color:var(--t4);display:flex;align-items:center;gap:2px;"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+    <button class="hbtn cy" id="btn-install" onclick="triggerInstall()">📲 Install</button>
+  </div>
+</header>
+
+<!-- WORKSPACE -->
+<div class="ws">
+
+  <!-- LEFT PANEL -->
+  <div class="lpanel">
+
+    <!-- AI MODE SELECTOR -->
+    <div class="mode-bar">
+      <div class="mode-bar-label">
+        AI Engine
+        <div class="lock-notice" id="lock-notice">🔒 LOCKED — build chal raha hai</div>
+      </div>
+      <div class="mode-cards">
+
+        <!-- LOCAL AI CARD -->
+        <div class="mode-card local selected" id="card-local" onclick="selectMode('local')">
+          <div class="mc-header">
+            <span class="mc-icon">🔒</span>
+            <span class="mc-badge">FREE · OFFLINE</span>
+          </div>
+          <div class="mc-name">Local AI</div>
+          <div class="mc-desc">Device pe chalta hai.<br>No cost. No internet.</div>
+
+          <!-- Model sub-options -->
+          <div class="mc-subopts" id="local-subopts">
+            <div class="mc-subopt active" id="so-gemma" onclick="selectModel('gemma2b',event)">
+              <span class="mc-subopt-name">⚡ Gemma 2B</span>
+              <span class="mc-subopt-speed">~5-8 min</span>
+            </div>
+            <div class="mc-subopt" id="so-phi3" onclick="selectModel('phi3mini',event)">
+              <span class="mc-subopt-name">🎯 Phi-3 Mini</span>
+              <span class="mc-subopt-speed">~8-12 min</span>
+            </div>
+          </div>
+
+          <!-- Lock overlay -->
+          <div class="lock-overlay" id="lock-local">
+            <div class="lock-ico">🔒</div>
+            <div class="lock-txt">LOCKED</div>
+          </div>
+        </div>
+
+        <!-- CLOUD API CARD -->
+        <div class="mode-card cloud" id="card-cloud" onclick="selectMode('cloud')">
+          <div class="mc-header">
+            <span class="mc-icon">☁️</span>
+            <span class="mc-badge">API KEY</span>
+          </div>
+          <div class="mc-name">Cloud API</div>
+          <div class="mc-desc">Fast. ~30 sec.<br>API key chahiye.</div>
+
+          <!-- API key input -->
+          <div class="mc-apikey">
+            <input class="apikey-inp" id="api-key-inp" type="password"
+              placeholder="sk-ant-... paste karo"
+              onclick="event.stopPropagation()"
+              oninput="saveApiKey(this.value)">
+          </div>
+
+          <!-- Lock overlay -->
+          <div class="lock-overlay" id="lock-cloud">
+            <div class="lock-ico">🔒</div>
+            <div class="lock-txt">LOCKED</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PROMPT -->
+    <div class="prompt-sec">
+      <div class="ps-top">
+        <div class="ps-label">Describe your app</div>
+        <div class="speed-toggle" id="speed-toggle">
+          <button class="stog-opt fast active" id="stog-fast" onclick="setSpeed('fast')">⚡ FAST</button>
+          <button class="stog-opt quality" id="stog-quality" onclick="setSpeed('quality')">🎯 QUALITY</button>
+        </div>
+      </div>
+      <div class="prompt-row">
+        <textarea class="prompt-ta" id="prompt-ta" rows="2"
+          placeholder="Kuch bhi likho — 'Dadi ki rasoi ke liye app', 'school attendance', 'budget tracker Hindi mein'..."></textarea>
+        <button class="build-btn" id="build-btn" onclick="startBuild()">Build →</button>
+      </div>
+    </div>
+
+    <!-- STAGE BAR -->
+    <div class="stage-bar" id="stage-bar">
+      <div class="stage-item"><div class="snode" id="sn1">01 · THINK</div><span class="sarrow">→</span></div>
+      <div class="stage-item"><div class="snode" id="sn2">02 · HTML</div><span class="sarrow">→</span></div>
+      <div class="stage-item"><div class="snode" id="sn3">03 · CSS</div><span class="sarrow">→</span></div>
+      <div class="stage-item"><div class="snode" id="sn4">04 · JS</div><span class="sarrow">→</span></div>
+      <div class="stage-item"><div class="snode" id="sn5">05 · DONE</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab active" id="tab-stream" onclick="switchTab('stream')"><span class="tdot"></span>AI Thinking</button>
+      <button class="tab" id="tab-preview" onclick="switchTab('preview')"><span class="tdot"></span>Preview</button>
+      <button class="tab" id="tab-apps" onclick="switchTab('apps')"><span class="tdot"></span>Saved Apps</button>
+    </div>
+
+    <!-- PANES -->
+    <div class="panes">
+
+      <div class="pane active" id="pane-stream">
+        <div class="stream" id="stream"></div>
+      </div>
+
+      <div class="pane" id="pane-preview">
+        <div class="preview-wrap">
+          <div class="preview-topbar">
+            <div class="preview-url" id="preview-url">No app yet</div>
+            <button class="hbtn" onclick="refreshPreview()">↺</button>
+            <button class="hbtn cy" id="dl-btn" onclick="downloadApp()">↓ Download</button>
+          </div>
+          <div class="preview-fw" id="preview-fw">
+            <div class="preview-empty">
+              <div class="pei">👻</div>
+              <div class="pet">App preview here.<br>Prompt likho → Build dabao.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-apps">
+        <div class="apps-list" id="apps-list">
+          <div class="empty-st"><div class="esi">📦</div><div class="est">No saved apps yet.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="rpanel">
+
+    <div class="ring-wrap">
+      <svg class="ring-svg" viewBox="0 0 68 68">
+        <circle class="ring-bg" cx="34" cy="34" r="27"/>
+        <circle class="ring-fill" cx="34" cy="34" r="27"
+          id="ring-c" stroke-dasharray="169.65" stroke-dashoffset="169.65"/>
+        <text class="ring-pct" x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" id="ring-pct">0%</text>
+        <text class="ring-sub" x="50%" y="63%" dominant-baseline="middle" text-anchor="middle">BUILD</text>
+      </svg>
+    </div>
+
+    <div class="stats-g">
+      <div class="sbox"><div class="sval cy" id="st-apps">0</div><div class="slbl">Apps</div></div>
+      <div class="sbox"><div class="sval gr" id="st-lines">0</div><div class="slbl">Lines</div></div>
+      <div class="sbox"><div class="sval am" id="st-stage">—</div><div class="slbl">Stage</div></div>
+      <div class="sbox"><div class="sval pu" id="st-calls">0</div><div class="slbl">AI Calls</div></div>
+    </div>
+
+    <div class="spec-scroll" id="spec-scroll">
+      <div class="rp-sec">
+        <div class="rp-lbl">App Specification</div>
+        <div id="spec-body" style="font-size:10px;color:var(--t4);">Build karo — spec yahan aayegi.</div>
+      </div>
+    </div>
+
+    <div class="dev-rows">
+      <div class="rp-lbl">Device · Real</div>
+      <div class="dev-row"><span class="dev-k">RAM</span><span class="dev-v" id="d-ram">—</span></div>
+      <div class="dev-row"><span class="dev-k">Cores</span><span class="dev-v" id="d-cores">—</span></div>
+      <div class="dev-row"><span class="dev-k">Network</span><span class="dev-v gr" id="d-net">—</span></div>
+      <div class="dev-row"><span class="dev-k">JS Heap</span><span class="dev-v nu" id="d-heap">—</span></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- STATUS BAR -->
+<div class="sbar idle" id="sbar">
+  <span class="sb-i" id="sb-main">Ready</span>
+  <span class="sb-sep"></span>
+  <span class="sb-i" id="sb-engine">Local AI · Gemma 2B</span>
+  <span class="sb-sp"></span>
+  <span class="sb-i" style="color:var(--t4)">Mohammed Raza Zaidi · Gujarat</span>
+</div>
+
+<!-- CMD PALETTE -->
+<div class="cp-bg" id="cp-bg" onclick="closePalette(event)">
+  <div class="cp-box">
+    <div class="cp-row">
+      <span style="color:var(--t3)">🔍</span>
+      <input class="cp-inp" id="cp-inp" placeholder="Search commands..." oninput="filterPalette(this.value)" onkeydown="cpKey(event)">
+    </div>
+    <div class="cp-res" id="cp-res"></div>
+    <div class="cp-foot"><span><kbd>↑↓</kbd> navigate</span><span><kbd>↵</kbd> run</span><span><kbd>Esc</kbd> close</span></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-t" id="modal-t"></div>
+    <div class="modal-b" id="modal-b"></div>
+    <div class="modal-btns">
+      <button class="mbtn" onclick="closeModal()">Cancel</button>
+      <button class="mbtn ok" id="modal-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- iOS SHEET -->
+<div class="ios-bg" id="ios-bg">
+  <div class="ios-sheet">
+    <div class="ios-handle"></div>
+    <div class="ios-title">Install Ghost Builder</div>
+    <div class="ios-step"><div class="ios-num">1</div><div class="ios-txt">Neeche <strong>Share ↑</strong> button dabao</div></div>
+    <div class="ios-step"><div class="ios-num">2</div><div class="ios-txt"><strong>"Add to Home Screen"</strong> select karo</div></div>
+    <div class="ios-step"><div class="ios-num">3</div><div class="ios-txt"><strong>"Add"</strong> dabao</div></div>
+    <div class="ios-step"><div class="ios-num">✓</div><div class="ios-txt">Ghost Builder <strong>full screen app</strong> ki tarah kholega</div></div>
+    <button class="ios-close" onclick="document.getElementById('ios-bg').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════════════
+   GHOST BUILDER v6.0 — FULL ENGINE
+   Local AI + Cloud API · Lock System · Agentic Pipeline
+   Mohammed Raza Zaidi · Gujarat · Redmi 12
+══════════════════════════════════════════════════ */
+
+// ── STATE ──
+const G = {
+  mode: 'local',          // 'local' | 'cloud'
+  model: 'gemma2b',       // 'gemma2b' | 'phi3mini'
+  speed: 'fast',          // 'fast' | 'quality'
+  locked: false,          // true during build
+  building: false,
+  apiKey: '',
+  localEngine: null,      // Web-LLM engine instance
+  localLoaded: false,
+  apps: [],
+  currentApp: null,
+  totalLines: 0,
+  aiCalls: 0,
+  progress: 0,
+};
+
+// ── MODEL CONFIG ──
+const MODELS = {
+  gemma2b: {
+    id: 'gemma-2-2b-it-q4f32_1-MLC',
+    name: 'Gemma 2B',
+    speed: '~5-8 min',
+    size: '~1.5GB'
+  },
+  phi3mini: {
+    id: 'Phi-3-mini-4k-instruct-q4f16_1-MLC',
+    name: 'Phi-3 Mini',
+    speed: '~8-12 min',
+    size: '~2.2GB'
+  }
+};
+
+const CLOUD_URL   = 'https://api.anthropic.com/v1/messages';
+const CLOUD_MODEL = 'claude-sonnet-4-20250514';
+
+// ══════════════════════════════════
+// MODE SELECTION + LOCK SYSTEM
+// ══════════════════════════════════
+function selectMode(m) {
+  if (G.locked) {
+    slog('🔒 Build chal raha hai — mode switch nahi kar sakte', 'lock');
+    return;
+  }
+  G.mode = m;
+  document.getElementById('card-local').classList.toggle('selected', m === 'local');
+  document.getElementById('card-cloud').classList.toggle('selected', m === 'cloud');
+
+  // Update header pill
+  const pill = document.getElementById('pill-mode');
+  const pillTxt = document.getElementById('pill-mode-txt');
+  if (m === 'local') {
+    pill.className = 'pill cy';
+    pillTxt.textContent = `LOCAL · ${MODELS[G.model].name}`;
+    document.getElementById('sb-engine').textContent = `Local AI · ${MODELS[G.model].name}`;
+  } else {
+    pill.className = 'pill am';
+    pillTxt.textContent = 'CLOUD API';
+    document.getElementById('sb-engine').textContent = 'Cloud API · Claude';
+  }
+
+  slog(`Mode → ${m === 'local' ? 'Local AI' : 'Cloud API'}`, 'sys');
+}
+
+function selectModel(m, e) {
+  e?.stopPropagation();
+  if (G.locked) { slog('🔒 Build chal raha hai — model switch nahi kar sakte', 'lock'); return; }
+  G.model = m;
+  document.getElementById('so-gemma').classList.toggle('active', m === 'gemma2b');
+  document.getElementById('so-phi3').classList.toggle('active', m === 'phi3mini');
+  document.getElementById('pill-mode-txt').textContent = `LOCAL · ${MODELS[m].name}`;
+  document.getElementById('sb-engine').textContent = `Local AI · ${MODELS[m].name}`;
+  slog(`Model → ${MODELS[m].name} (${MODELS[m].speed})`, 'sys');
+}
+
+function saveApiKey(val) {
+  G.apiKey = val.trim();
+  try { localStorage.setItem('ghost_api_key', G.apiKey); } catch(e) {}
+}
+
+function setSpeed(s) {
+  G.speed = s;
+  document.getElementById('stog-fast').classList.toggle('active', s === 'fast');
+  document.getElementById('stog-quality').classList.toggle('active', s === 'quality');
+  slog(`Speed → ${s === 'fast' ? '⚡ Fast (~5-8 min)' : '🎯 Quality (~8-12 min)'}`, 'sys');
+}
+
+// ── LOCK / UNLOCK ──
+function lockMode() {
+  G.locked = true;
+  document.getElementById('lock-notice').classList.add('show');
+
+  if (G.mode === 'local') {
+    // Lock cloud card
+    document.getElementById('lock-cloud').classList.add('show');
+    document.getElementById('card-cloud').classList.add('locked');
+  } else {
+    // Lock local card
+    document.getElementById('lock-local').classList.add('show');
+    document.getElementById('card-local').classList.add('locked');
+  }
+  slog(`🔒 Mode locked → ${G.mode === 'local' ? 'Local AI' : 'Cloud API'} — build complete hone tak switch nahi hoga`, 'lock');
+}
+
+function unlockMode() {
+  G.locked = false;
+  document.getElementById('lock-notice').classList.remove('show');
+  document.getElementById('lock-cloud').classList.remove('show');
+  document.getElementById('lock-local').classList.remove('show');
+  document.getElementById('card-cloud').classList.remove('locked');
+  document.getElementById('card-local').classList.remove('locked');
+  slog('🔓 Mode unlocked — ab switch kar sakte ho', 'ok');
+}
+
+// ══════════════════════════════════
+// BUILD PIPELINE
+// ══════════════════════════════════
+async function startBuild() {
+  const prompt = document.getElementById('prompt-ta').value.trim();
+  if (!prompt) { slog('Pehle app describe karo', 'err'); return; }
+  if (G.building) { slog('Build chal raha hai — wait karo', 'err'); return; }
+
+  // Cloud mode: check API key
+  if (G.mode === 'cloud' && !G.apiKey) {
+    slog('Cloud mode: pehle API key daalo (card mein input hai)', 'err');
+    return;
+  }
+
+  G.building = true;
+  G.progress = 0;
+  G.totalLines = 0;
+  G.currentApp = { prompt, html:'', css:'', js:'', spec:null, ts: new Date().toISOString() };
+
+  document.getElementById('build-btn').disabled = true;
+  document.getElementById('sbar').className = 'sbar';
+  document.getElementById('stream').innerHTML = '';
+  resetStages();
+  switchTab('stream');
+  lockMode();
+
+  slog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'sys');
+  slog('GHOST BUILDER — BUILD STARTED', 'head');
+  slog(`Prompt: "${prompt}"`, 'data');
+  slog(`Engine: ${G.mode === 'local' ? MODELS[G.model].name + ' (Local)' : 'Claude (Cloud)'}`, 'data');
+  slog(`Speed: ${G.speed === 'fast' ? 'Fast' : 'Quality'}`, 'data');
+  slog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'sys');
+
+  try {
+    if (G.mode === 'local') {
+      await ensureLocalAI();
+    }
+    await stage1_thinkAndSpec(prompt);
+    await stage2_html();
+    await stage3_css();
+    await stage4_js();
+    await stage5_assemble();
+  } catch(err) {
+    slog(`Build failed: ${err.message}`, 'err');
+    G.errorCount = (G.errorCount || 0) + 1;
+  } finally {
+    G.building = false;
+    document.getElementById('build-btn').disabled = false;
+    document.getElementById('sbar').className = 'sbar idle';
+    setPillStage('DONE');
+    unlockMode();
+  }
+}
+
+// ── LOCAL AI LOADER ──
+async function ensureLocalAI() {
+  if (G.localLoaded && G.localEngine) return;
+  slog('Loading Web-LLM library...', 'sys');
+
+  // Load MLC Web-LLM
+  if (typeof webllm === 'undefined') {
+    await loadScript('https://esm.sh/@mlc-ai/web-llm');
+    slog('Web-LLM library loaded ✓', 'ok');
+  }
+
+  const modelId = MODELS[G.model].id;
+  slog(`Loading ${MODELS[G.model].name} (${MODELS[G.model].size})...`, 'sys');
+  slog('Pehli baar: WiFi pe ~' + MODELS[G.model].size + ' download hoga. Ek baar. Uske baad offline.', 'spec');
+
+  const initProgressCallback = (report) => {
+    const pct = Math.round(report.progress * 100);
+    document.getElementById('sb-main').textContent = `Loading model: ${pct}% — ${report.text || ''}`;
+    if (pct % 10 === 0) slog(`Model loading: ${pct}%`, 'sys');
+  };
+
+  G.localEngine = await webllm.CreateMLCEngine(modelId, {
+    initProgressCallback,
+    logLevel: 'SILENT'
+  });
+  G.localLoaded = true;
+  slog(`${MODELS[G.model].name} loaded ✓ — offline ready`, 'ok');
+}
+
+function loadScript(url) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.type = 'module';
+    s.src = url;
+    s.onload = res;
+    s.onerror = () => rej(new Error('Failed to load: ' + url));
+    document.head.appendChild(s);
+  });
+}
+
+// ── AI CALL ──
+async function callAI(system, user, onChunk) {
+  G.aiCalls++;
+  document.getElementById('st-calls').textContent = G.aiCalls;
+
+  const maxTok = G.speed === 'fast' ? 1500 : 3000;
+
+  if (G.mode === 'local') {
+    return callLocalAI(system, user, onChunk, maxTok);
+  } else {
+    return callCloudAI(system, user, onChunk, maxTok);
+  }
+}
+
+async function callLocalAI(system, user, onChunk, maxTok) {
+  if (!G.localEngine) throw new Error('Local AI not loaded');
+  const messages = [
+    { role: 'system', content: system },
+    { role: 'user', content: user }
+  ];
+
+  let full = '';
+  const reply = await G.localEngine.chat.completions.create({
+    messages,
+    max_tokens: maxTok,
+    stream: true,
+    temperature: 0.7,
+  });
+
+  for await (const chunk of reply) {
+    const text = chunk.choices[0]?.delta?.content || '';
+    if (text) { full += text; if (onChunk) onChunk(text, full); }
+  }
+  return full;
+}
+
+async function callCloudAI(system, user, onChunk, maxTok) {
+  const res = await fetch(CLOUD_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': G.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: CLOUD_MODEL,
+      max_tokens: maxTok,
+      stream: true,
+      system,
+      messages: [{ role: 'user', content: user }]
+    })
+  });
+
+  if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
+
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let full = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const lines = dec.decode(value).split('\n').filter(l => l.startsWith('data: '));
+    for (const line of lines) {
+      const data = line.slice(6);
+      if (data === '[DONE]') continue;
+      try {
+        const json = JSON.parse(data);
+        const text = json.delta?.text || '';
+        if (text) { full += text; if (onChunk) onChunk(text, full); }
+      } catch {}
+    }
+  }
+  return full;
+}
+
+// ── STAGE 1: THINK + SPEC ──
+async function stage1_thinkAndSpec(prompt) {
+  setStage(1, 'active');
+  setPillStage('THINKING');
+  slog('── STAGE 01: AI THINKING ──', 'head');
+  slog('AI: Prompt analyze kar raha hoon...', 'think');
+
+  const isFast = G.speed === 'fast';
+  const system = `You are an expert app builder AI.
+Analyze the user's app request and create a complete specification.
+Think step by step:
+1. Who is the user? What do they need?
+2. What features are essential?
+3. What UI style fits them?
+4. What data needs to be stored?
+${isFast ? 'Be concise. Essential features only.' : 'Be thorough. Research user needs deeply.'}
+
+Output JSON only, no markdown:
+{
+  "name": "App Name",
+  "tagline": "short description",
+  "language": "Hindi/English/Mixed",
+  "colorScheme": {"primary":"#hex","background":"#hex","surface":"#hex","text":"#hex","accent":"#hex"},
+  "features": ["feature1","feature2"],
+  "layout": "layout description",
+  "dataStorage": "what to store in localStorage",
+  "font": "font suggestion",
+  "style": "visual style description"
+}`;
+
+  let specText = '';
+  await callAI(system, `Build an app for: "${prompt}"`, (chunk, full) => {
+    streamChunk(chunk);
+    specText = full;
+  });
+
+  try {
+    const m = specText.match(/\{[\s\S]*\}/);
+    if (m) {
+      G.currentApp.spec = JSON.parse(m[0]);
+      renderSpec(G.currentApp.spec);
+      slog(`App: "${G.currentApp.spec.name}"`, 'data');
+      slog(`Features: ${G.currentApp.spec.features?.length} identified`, 'data');
+    }
+  } catch(e) {
+    G.currentApp.spec = { name: 'My App', features: [], colorScheme: { primary:'#007AFF', background:'#ffffff', text:'#000000' } };
+  }
+
+  setStage(1, 'done');
+  setProgress(20);
+  slog('Stage 01 complete ✓', 'ok');
+}
+
+// ── STAGE 2: HTML ──
+async function stage2_html() {
+  setStage(2, 'active');
+  setPillStage('HTML');
+  slog('── STAGE 02: HTML GENERATION ──', 'head');
+  document.getElementById('sb-main').textContent = 'Generating HTML...';
+
+  const spec = G.currentApp.spec;
+  const isFast = G.speed === 'fast';
+  const system = `You are a senior frontend developer.
+Write complete, production-quality HTML5 for a mobile web app.
+${isFast ? 'Keep it focused — essential elements only. No comments.' : 'Full semantic HTML. Accessibility. All UI elements.'}
+Language: ${spec?.language || 'English'}
+Rules: semantic HTML, mobile-first, data-attributes for JS, NO style or script tags.
+Output ONLY HTML.`;
+
+  let html = '';
+  await callAI(system, `Spec: ${JSON.stringify(spec)}\n\nWrite the complete HTML.`, (chunk, full) => {
+    streamChunk(chunk); html = full;
+    G.totalLines += chunk.split('\n').length;
+  });
+
+  G.currentApp.html = html;
+  document.getElementById('st-lines').textContent = G.totalLines;
+  setStage(2, 'done');
+  setProgress(45);
+  slog(`HTML: ${html.split('\n').length} lines ✓`, 'ok');
+}
+
+// ── STAGE 3: CSS ──
+async function stage3_css() {
+  setStage(3, 'active');
+  setPillStage('CSS');
+  slog('── STAGE 03: CSS GENERATION ──', 'head');
+  document.getElementById('sb-main').textContent = 'Generating CSS...';
+
+  const spec = G.currentApp.spec;
+  const isFast = G.speed === 'fast';
+  const system = `You are a UI/UX designer and CSS expert.
+Write complete, beautiful CSS for a mobile web app.
+${isFast ? 'Clean and minimal. Focus on usability.' : 'Rich design with transitions, animations, micro-interactions.'}
+Use CSS variables. Mobile-first. Color scheme from spec.
+${spec?.colorScheme ? `Colors: primary=${spec.colorScheme.primary} bg=${spec.colorScheme.background} text=${spec.colorScheme.text}` : ''}
+Output ONLY CSS.`;
+
+  let css = '';
+  await callAI(system,
+    `Spec: ${JSON.stringify(spec)}\nHTML: ${G.currentApp.html.slice(0,1200)}\n\nWrite complete CSS.`,
+    (chunk, full) => { streamChunk(chunk); css = full; G.totalLines += chunk.split('\n').length; }
+  );
+
+  G.currentApp.css = css;
+  document.getElementById('st-lines').textContent = G.totalLines;
+  setStage(3, 'done');
+  setProgress(70);
+  slog(`CSS: ${css.split('\n').length} lines ✓`, 'ok');
+}
+
+// ── STAGE 4: JS ──
+async function stage4_js() {
+  setStage(4, 'active');
+  setPillStage('JS');
+  slog('── STAGE 04: JAVASCRIPT ──', 'head');
+  document.getElementById('sb-main').textContent = 'Generating JS...';
+
+  const spec = G.currentApp.spec;
+  const isFast = G.speed === 'fast';
+  const system = `You are a JavaScript developer.
+Write complete, working vanilla JavaScript for a mobile web app.
+${isFast ? 'Minimal. Only essential logic. No comments.' : 'Complete logic. Error handling. Edge cases handled.'}
+Use localStorage for data. ES6+. DOMContentLoaded wrapper.
+Data to store: ${spec?.dataStorage || 'user data'}
+Output ONLY JavaScript.`;
+
+  let js = '';
+  await callAI(system,
+    `Spec: ${JSON.stringify(spec)}\nHTML: ${G.currentApp.html.slice(0,1000)}\n\nWrite complete JavaScript.`,
+    (chunk, full) => { streamChunk(chunk); js = full; G.totalLines += chunk.split('\n').length; }
+  );
+
+  G.currentApp.js = js;
+  document.getElementById('st-lines').textContent = G.totalLines;
+  setStage(4, 'done');
+  setProgress(90);
+  slog(`JS: ${js.split('\n').length} lines ✓`, 'ok');
+}
+
+// ── STAGE 5: ASSEMBLE ──
+async function stage5_assemble() {
+  setStage(5, 'active');
+  setPillStage('ASSEMBLING');
+  slog('── STAGE 05: ASSEMBLING ──', 'head');
+
+  // Inject CSS + JS into HTML
+  let final = G.currentApp.html;
+
+  // Clean up if AI included style/script tags
+  final = final.replace(/<\/head>/i,
+    `\n<style>\n${G.currentApp.css}\n</style>\n</head>`);
+  final = final.replace(/<\/body>/i,
+    `\n<script>\n${G.currentApp.js}\n<\/script>\n</body>`);
+
+  G.currentApp.finalHtml = final;
+
+  // Save
+  const app = {
+    id: 'app_' + Date.now(),
+    name: G.currentApp.spec?.name || 'Generated App',
+    tagline: G.currentApp.spec?.tagline || '',
+    prompt: G.currentApp.prompt,
+    html: final,
+    features: G.currentApp.spec?.features || [],
+    engine: G.mode === 'local' ? MODELS[G.model].name : 'Cloud',
+    lines: G.totalLines,
+    ts: G.currentApp.ts,
+  };
+  G.apps.unshift(app);
+  dbSave(app);
+
+  setProgress(100);
+  setStage(5, 'done');
+  document.getElementById('st-apps').textContent = G.apps.length;
+  renderAppsList();
+  showPreview(final, app.name);
+
+  slog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'sys');
+  slog(`✓ "${app.name}" — BUILD COMPLETE`, 'ok');
+  slog(`Lines: ${G.totalLines} · Engine: ${app.engine}`, 'data');
+  slog('Preview tab mein dekho → Download → Phone mein use karo', 'ok');
+  slog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'sys');
+
+  setTimeout(() => switchTab('preview'), 700);
+}
+
+// ══════════════════════════════════
+// STREAM RENDERER
+// ══════════════════════════════════
+let _sbuf = '';
+let _stimer = null;
+let _scurdiv = null;
+
+function streamChunk(chunk) {
+  _sbuf += chunk;
+  if (_stimer) return;
+  const stream = document.getElementById('stream');
+  _stimer = setInterval(() => {
+    if (!_sbuf) { clearInterval(_stimer); _stimer = null; _scurdiv = null; return; }
+    const parts = _sbuf.split('\n');
+    _sbuf = parts.pop();
+    parts.forEach(line => {
+      if (!line.trim()) return;
+      const d = document.createElement('div');
+      d.className = 'aline code';
+      d.innerHTML = `<span class="al-ts">${ts()}</span><span class="al-tag">GEN  </span><span class="al-msg">${esc(line)}</span>`;
+      stream.appendChild(d);
+    });
+    if (_sbuf) {
+      if (!_scurdiv) { _scurdiv = document.createElement('div'); _scurdiv.className = 'aline code'; stream.appendChild(_scurdiv); }
+      _scurdiv.innerHTML = `<span class="al-ts">${ts()}</span><span class="al-tag">GEN  </span><span class="al-msg">${esc(_sbuf)}<span class="scur"></span></span>`;
+    }
+    stream.scrollTop = stream.scrollHeight;
+  }, 25);
+  _scurdiv = null;
+}
+
+function slog(msg, type = 'sys') {
+  const tags = { sys:'SYS  ',think:'THINK',spec:'SPEC ',code:'CODE ',ok:'OK   ',err:'ERR  ',head:'GHOST',data:'DATA ',lock:'LOCK ' };
+  const stream = document.getElementById('stream');
+  const d = document.createElement('div');
+  d.className = `aline ${type}`;
+  d.innerHTML = `<span class="al-ts">${ts()}</span><span class="al-tag">${tags[type]||'LOG  '}</span><span class="al-msg">${esc(msg)}</span>`;
+  stream.appendChild(d);
+  stream.scrollTop = stream.scrollHeight;
+}
+
+// ══════════════════════════════════
+// PREVIEW
+// ══════════════════════════════════
+function showPreview(html, name) {
+  const fw = document.getElementById('preview-fw');
+  document.getElementById('preview-url').textContent = name;
+  fw.innerHTML = '<div class="preview-loading"><div class="spin"></div><div class="spin-txt">Rendering app...</div></div>';
+  setTimeout(() => {
+    const iframe = document.createElement('iframe');
+    iframe.className = 'preview-frame';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+    fw.innerHTML = '';
+    fw.appendChild(iframe);
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open(); doc.write(html); doc.close();
+  }, 350);
+}
+
+function refreshPreview() {
+  if (G.currentApp?.finalHtml) showPreview(G.currentApp.finalHtml, G.currentApp.spec?.name || 'App');
+}
+
+function downloadApp(id) {
+  let app;
+  if (id) { app = G.apps.find(a => a.id === id); }
+  else {
+    if (!G.currentApp?.finalHtml) { slog('Pehle app build karo', 'err'); return; }
+    app = { html: G.currentApp.finalHtml, name: G.currentApp.spec?.name || 'my-app' };
+  }
+  if (!app) return;
+  const fname = (app.name || 'ghost-app').toLowerCase().replace(/[^a-z0-9]/g, '-') + '.html';
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([app.html], { type: 'text/html' })),
+    download: fname
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  slog(`Downloaded: ${fname}`, 'ok');
+}
+
+// ══════════════════════════════════
+// SPEC + APPS UI
+// ══════════════════════════════════
+function renderSpec(spec) {
+  if (!spec) return;
+  const colors = spec.colorScheme ? Object.entries(spec.colorScheme).map(([k,v]) =>
+    `<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+      <div style="width:12px;height:12px;background:${v};border-radius:2px;border:1px solid rgba(255,255,255,.1);flex-shrink:0"></div>
+      <span style="font-size:9px;color:var(--t3)">${k}: ${v}</span>
+    </div>`).join('') : '';
+
+  document.getElementById('spec-body').innerHTML = `
+    <div class="spec-blk">
+      <div class="spec-blk-lbl">Name</div>
+      <div class="spec-blk-val">${esc(spec.name||'—')}</div>
+      ${spec.tagline ? `<div class="spec-blk-val mono" style="margin-top:3px">${esc(spec.tagline)}</div>` : ''}
+    </div>
+    ${spec.features?.length ? `<div class="spec-blk">
+      <div class="spec-blk-lbl">Features (${spec.features.length})</div>
+      <div class="feat-list">${spec.features.map(f=>`<div class="feat-item">${esc(f)}</div>`).join('')}</div>
+    </div>` : ''}
+    ${colors ? `<div class="spec-blk"><div class="spec-blk-lbl">Colors</div>${colors}</div>` : ''}
+    ${spec.language ? `<div class="spec-blk"><div class="spec-blk-lbl">Language</div><div class="spec-blk-val mono">${esc(spec.language)}</div></div>` : ''}
+  `;
+}
+
+function renderAppsList() {
+  const list = document.getElementById('apps-list');
+  if (!G.apps.length) {
+    list.innerHTML = '<div class="empty-st"><div class="esi">📦</div><div class="est">No apps yet.</div></div>';
+    return;
+  }
+  list.innerHTML = G.apps.map(app => `
+    <div class="app-card">
+      <div class="acard-top">
+        <div class="acard-name">${esc(app.name)}</div>
+        <div class="acard-ts">${new Date(app.ts).toLocaleDateString()}</div>
+      </div>
+      <div class="acard-desc">"${esc(app.prompt)}"</div>
+      <div class="acard-tags">
+        ${(app.features||[]).slice(0,3).map(f=>`<span class="atag">${esc(f)}</span>`).join('')}
+        ${app.lines ? `<span class="atag">${app.lines} lines</span>` : ''}
+        ${app.engine ? `<span class="atag">${esc(app.engine)}</span>` : ''}
+      </div>
+      <div class="acard-btns">
+        <button class="acbtn" onclick="previewSaved('${app.id}')">👁 Preview</button>
+        <button class="acbtn dl" onclick="downloadApp('${app.id}')">↓ Download</button>
+        <button class="acbtn del" onclick="deleteApp('${app.id}')">✕ Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function previewSaved(id) {
+  const app = G.apps.find(a => a.id === id);
+  if (!app) return;
+  G.currentApp = { finalHtml: app.html, spec: { name: app.name } };
+  showPreview(app.html, app.name);
+  switchTab('preview');
+}
+
+function deleteApp(id) {
+  G.apps = G.apps.filter(a => a.id !== id);
+  dbDelete(id);
+  renderAppsList();
+  document.getElementById('st-apps').textContent = G.apps.length;
+}
+
+// ══════════════════════════════════
+// STAGE + PROGRESS
+// ══════════════════════════════════
+function setStage(n, state) {
+  document.getElementById(`sn${n}`).className = `snode ${state}`;
+  document.getElementById('st-stage').textContent = `0${n}/05`;
+  document.getElementById('sb-main').textContent = `Stage ${n}/5 running...`;
+}
+function resetStages() { for(let i=1;i<=5;i++) document.getElementById(`sn${i}`).className='snode'; }
+function setProgress(pct) {
+  G.progress = pct;
+  const c = 169.65;
+  document.getElementById('ring-c').setAttribute('stroke-dashoffset', c - (c * pct / 100));
+  document.getElementById('ring-pct').textContent = pct + '%';
+}
+function setPillStage(txt) {
+  document.getElementById('pill-stage').className = 'pill pu';
+  document.getElementById('pill-stage-txt').textContent = txt;
+}
+
+// ══════════════════════════════════
+// TABS
+// ══════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === `tab-${name}`));
+  document.querySelectorAll('.pane').forEach(p => p.classList.toggle('active', p.id === `pane-${name}`));
+}
+
+// ══════════════════════════════════
+// INDEXEDDB
+// ══════════════════════════════════
+let DB = null;
+async function initDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('ghost-v6', 1);
+    req.onupgradeneeded = e => { const db = e.target.result; if (!db.objectStoreNames.contains('apps')) db.createObjectStore('apps', { keyPath:'id' }); };
+    req.onsuccess = e => { DB = e.target.result; res(); };
+    req.onerror = () => rej(req.error);
+  });
+}
+function dbSave(app) { if (!DB) return; DB.transaction('apps','readwrite').objectStore('apps').put(app); }
+function dbDelete(id) { if (!DB) return; DB.transaction('apps','readwrite').objectStore('apps').delete(id); }
+async function dbLoadAll() {
+  return new Promise(res => {
+    if (!DB) return res([]);
+    const req = DB.transaction('apps','readonly').objectStore('apps').getAll();
+    req.onsuccess = () => res(req.result || []);
+    req.onerror = () => res([]);
+  });
+}
+
+// ══════════════════════════════════
+// DEVICE DETECTION
+// ══════════════════════════════════
+function detectDevice() {
+  const ram = navigator.deviceMemory;
+  document.getElementById('d-ram').textContent = ram ? `${ram} GB` : 'N/A';
+  if (ram && ram <= 2) document.getElementById('d-ram').className = 'dev-v am';
+  document.getElementById('d-cores').textContent = (navigator.hardwareConcurrency || 'N/A') + ' cores';
+
+  const conn = navigator.connection;
+  if (conn) {
+    const t = conn.effectiveType || '?';
+    document.getElementById('d-net').textContent = t.toUpperCase();
+    document.getElementById('d-net').className = 'dev-v ' + (t.includes('4') || t.includes('wifi') ? 'gr' : 'am');
+  }
+
+  setInterval(() => {
+    if (performance.memory) {
+      document.getElementById('d-heap').textContent = (performance.memory.usedJSHeapSize / 1048576).toFixed(0) + ' MB';
+    }
+    const online = navigator.onLine;
+    document.getElementById('pill-net').className = `pill ${online ? 'gr' : 'rd'}`;
+    document.getElementById('pill-net-txt').textContent = online ? 'ONLINE' : 'OFFLINE';
+    document.getElementById('d-net').className = `dev-v ${online ? 'gr' : 'am'}`;
+  }, 3000);
+}
+
+// ══════════════════════════════════
+// PWA
+// ══════════════════════════════════
+let installPrompt = null;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); installPrompt = e;
+  document.getElementById('btn-install').classList.add('show');
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('btn-install').classList.remove('show');
+  slog('App installed on device ✓', 'ok');
+});
+function triggerInstall() {
+  if (isIOS) { document.getElementById('ios-bg').classList.add('open'); return; }
+  if (installPrompt) {
+    installPrompt.prompt();
+    installPrompt.userChoice.then(r => { if(r.outcome==='accepted') slog('Install accepted ✓','ok'); installPrompt=null; });
+  } else {
+    showModal('Install Guide',
+      `GitHub Pages pe daalo:\n1. index.html naam se save karo\n2. New GitHub repo banao\n3. File upload karo\n4. Settings → Pages → Enable\n5. Link Chrome mein kholo — Install button aayega`, null);
+  }
+}
+function setupPWA() {
+  const icon = makeIcon(192);
+  const manifest = { name:'Ghost Builder v6.0', short_name:'GhostBuild', start_url:'/', display:'standalone', background_color:'#070A0F', theme_color:'#070A0F', icons:[{src:icon,sizes:'192x192',type:'image/png',purpose:'any maskable'}] };
+  const l = document.createElement('link');
+  l.rel = 'manifest';
+  l.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));
+  document.head.appendChild(l);
+  const al = document.createElement('link'); al.rel='apple-touch-icon'; al.href=icon; document.head.appendChild(al);
+  if ('serviceWorker' in navigator) {
+    const sw = `self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));`;
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+  }
+  if (isIOS && !window.navigator.standalone) setTimeout(()=>document.getElementById('btn-install').classList.add('show'),2000);
+}
+function makeIcon(s) {
+  const c = document.createElement('canvas'); c.width = c.height = s;
+  const x = c.getContext('2d');
+  x.fillStyle='#070A0F'; x.fillRect(0,0,s,s);
+  x.fillStyle='#0369A1'; x.beginPath(); x.roundRect(s*.08,s*.08,s*.84,s*.84,s*.15); x.fill();
+  const g = x.createRadialGradient(s/2,s/2,0,s/2,s/2,s*.4);
+  g.addColorStop(0,'rgba(56,189,248,.25)'); g.addColorStop(1,'transparent');
+  x.fillStyle=g; x.fillRect(0,0,s,s);
+  x.font=`${s*.44}px serif`; x.textAlign='center'; x.textBaseline='middle'; x.fillText('👻',s/2,s*.47);
+  x.fillStyle='#38BDF8'; x.font=`700 ${s*.1}px monospace`; x.fillText('v6',s/2,s*.83);
+  return c.toDataURL();
+}
+
+// ══════════════════════════════════
+// COMMAND PALETTE
+// ══════════════════════════════════
+const CMDS = [
+  {i:'▶',n:'Start Build',d:'Build app from current prompt',g:'Build',a:()=>startBuild()},
+  {i:'👁',n:'Preview',d:'View generated app',g:'View',a:()=>switchTab('preview')},
+  {i:'📦',n:'Saved Apps',d:'All saved apps',g:'View',a:()=>switchTab('apps')},
+  {i:'💬',n:'AI Stream',d:'View AI thinking output',g:'View',a:()=>switchTab('stream')},
+  {i:'↓',n:'Download',d:'Download current app',g:'File',a:()=>downloadApp()},
+  {i:'🔒',n:'Local AI',d:'Switch to Local AI mode',g:'Mode',a:()=>selectMode('local')},
+  {i:'☁️',n:'Cloud API',d:'Switch to Cloud API mode',g:'Mode',a:()=>selectMode('cloud')},
+  {i:'⚡',n:'Fast Mode',d:'Gemma 2B — 5-8 min',g:'Speed',a:()=>{selectModel('gemma2b');setSpeed('fast');}},
+  {i:'🎯',n:'Quality Mode',d:'Phi-3 Mini — 8-12 min',g:'Speed',a:()=>{selectModel('phi3mini');setSpeed('quality');}},
+  {i:'📲',n:'Install App',d:'Add to home screen',g:'System',a:()=>triggerInstall()},
+  {i:'✕',n:'Clear Stream',d:'Clear terminal',g:'System',a:()=>{document.getElementById('stream').innerHTML='';slog('Cleared','sys');}},
+];
+let cpSel = -1;
+function openPalette(){document.getElementById('cp-bg').classList.add('open');document.getElementById('cp-inp').value='';cpSel=-1;filterPalette('');setTimeout(()=>document.getElementById('cp-inp').focus(),50);}
+function closePalette(e){if(!e||e.target===document.getElementById('cp-bg'))document.getElementById('cp-bg').classList.remove('open');}
+function filterPalette(q){
+  const f=q?CMDS.filter(c=>c.n.toLowerCase().includes(q.toLowerCase())||c.d.toLowerCase().includes(q.toLowerCase())):CMDS;
+  const grps={};f.forEach(c=>(grps[c.g]=grps[c.g]||[]).push(c));
+  document.getElementById('cp-res').innerHTML=Object.entries(grps).map(([g,items])=>
+    `<div class="cp-grp">${g}</div>${items.map(item=>
+      `<div class="cp-item" onclick="runCmd(${CMDS.indexOf(item)})"><div class="cp-ico">${item.i}</div><div class="cp-item-b"><div class="cp-item-n">${item.n}</div><div class="cp-item-d">${item.d}</div></div></div>`
+    ).join('')}`).join('');
+}
+function runCmd(i){closePalette();switchTab('stream');if(CMDS[i])CMDS[i].a();}
+function cpKey(e){
+  const items=document.querySelectorAll('.cp-item');
+  if(e.key==='ArrowDown'){cpSel=Math.min(cpSel+1,items.length-1);items.forEach((el,i)=>el.classList.toggle('sel',i===cpSel));e.preventDefault();}
+  else if(e.key==='ArrowUp'){cpSel=Math.max(cpSel-1,0);items.forEach((el,i)=>el.classList.toggle('sel',i===cpSel));e.preventDefault();}
+  else if(e.key==='Enter'){const s=document.querySelector('.cp-item.sel');if(s)s.click();else if(items[0])items[0].click();}
+  else if(e.key==='Escape')closePalette();
+}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openPalette();}});
+
+// MODAL
+function showModal(title,body,onConfirm){
+  document.getElementById('modal-t').textContent=title;
+  document.getElementById('modal-b').innerHTML=(body||'').replace(/\n/g,'<br>');
+  const ok=document.getElementById('modal-ok');
+  if(onConfirm){ok.style.display='';ok.onclick=()=>{closeModal();onConfirm();};}
+  else ok.style.display='none';
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+
+// UTILS
+function ts(){const d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// Enter on prompt
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('prompt-ta').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();startBuild();}});
+});
+
+// ══════════════════════════════════
+// BOOT
+// ══════════════════════════════════
+async function boot() {
+  setupPWA();
+  detectDevice();
+
+  // Load saved API key
+  try {
+    const k = localStorage.getItem('ghost_api_key');
+    if (k) { G.apiKey = k; document.getElementById('api-key-inp').value = k; }
+  } catch(e) {}
+
+  // Load saved apps
+  try {
+    await initDB();
+    const saved = await dbLoadAll();
+    if (saved.length) {
+      G.apps = saved.sort((a,b) => new Date(b.ts) - new Date(a.ts));
+      document.getElementById('st-apps').textContent = G.apps.length;
+      renderAppsList();
+    }
+  } catch(e) { slog('IndexedDB unavailable', 'err'); }
+
+  const msgs = [
+    {m:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',t:'sys',d:0},
+    {m:'Ghost Builder v6.0 — Agentic AI Engine',t:'head',d:100},
+    {m:'Developer: Mohammed Raza Zaidi · Gujarat · Redmi 12',t:'sys',d:250},
+    {m:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',t:'sys',d:400},
+    {m:'LOCAL AI mode selected by default — zero cost, offline',t:'ok',d:550},
+    {m:'⚡ Fast Mode: Gemma 2B (~5-8 min per app)',t:'spec',d:700},
+    {m:'🎯 Quality Mode: Phi-3 Mini (~8-12 min per app)',t:'spec',d:850},
+    {m:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',t:'sys',d:1000},
+    {m:'LOCK SYSTEM: Mode selects hone ke baad build shuru',t:'spec',d:1150},
+    {m:'karte hi lock ho jaata hai — complete hone tak switch nahi',t:'spec',d:1300},
+    {m:'━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',t:'sys',d:1450},
+    {m:'Ready. Apna app describe karo → Build dabao.',t:'data',d:1600},
+  ];
+  msgs.forEach(({m,t,d})=>setTimeout(()=>slog(m,t),d));
+}
+
+window.addEventListener('load', boot);
+</script>
+</body>
+</html>
